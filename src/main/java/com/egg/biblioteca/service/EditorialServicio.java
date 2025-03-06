@@ -48,6 +48,11 @@ public class EditorialServicio {
         }
     }
 
+    @Transactional(readOnly = true)
+    public Editorial getOne(UUID id) {
+        return editorialRepositorio.getReferenceById(id);
+    }
+
     public void validar(String nombre) throws MiException {
         if (nombre.isEmpty() || nombre == null) {
             throw new MiException("El nombre de la editorial no puede estar vacío o ser nulo");

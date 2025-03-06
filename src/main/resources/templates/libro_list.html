@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
     <head>
@@ -15,7 +14,7 @@
     </head>
 
     <body>
-       <nav class="navbar navbar-expand-lg navBar">
+      <nav class="navbar navbar-expand-lg navBar">
             <div class="containerImg">
                 <a href="/" class="navbar-brand d-flex align-items-center">
                   <img class="logo" src="/img/Egg.png" alt="Img logo egg">
@@ -70,40 +69,44 @@
               </ul>
             </div>
           </nav>
-
         <div class="container m-5" >
 
             <table class="table table-dark">
                 <thead>
                     <tr>
-                        <th scope="col">Id del Autor</th>
-                        <th scope="col">Nombre del Autor</th>
+                        <th scope="col">id</th>
+                        <th scope="col">Titulo</th>
+                        <th scope="col">Ejemplares</th>
+                        <th scope="col">Autor</th>
+                        <th scope="col">Editorial</th>
                         <th scope="col">Acciones</th>
-
+                        
                     </tr>
                 </thead>
-                <tbody th:each="autor : ${autores}"> 
+                <tbody th:each="libro : ${libros}"> 
                     <tr>
-                        <th scope="row" th:text="${autor.id}"></th>
-                        <td th:text="${autor.nombre}"></td>
-                        <td>
-                            <a th:href= "@{/autor/modificar/__${autor.id}__}"><i class="fas fa-feather-alt">  </i> Modificar </a>
+                        <th scope="row" th:text="${libro.isbn}"></th>
+                        <td th:text="${libro.titulo}"></td>
+                        <td th:text="${libro.ejemplares}"></td>
+                        <td th:text="${libro.autor.nombre}"></td>
+                        <td th:text="${libro.editorial.nombre}"></td>
+                         <td>
+                            <a th:href= "@{/libro/modificar/__${libro.isbn}__}"><i class="fas fa-feather-alt"></i> Modificar </a>
                         </td>
-
                     </tr>
 
                 </tbody>
             </table>
-
-            <div th:if="${exito}!=null" class="card text-white bg-success mb-3 mt-3 mensajeExito" >
+            
+              <div th:if="${exito}!=null" class="card text-white bg-success mb-3 mt-3 mensajeExito" >
                 <div class="card-body">
-                    <h5 class="card-title">Exito ðŸ‘ </h5>
+                    <h5 class="card-title">Exito ð</h5>
                     <p class="card-text" th:text="${exito}"></p>
                 </div>
             </div>
             <div th:if="${error}!=null" class="card text-white bg-danger mb-3 mensajeError" >
                 <div class="card-body">
-                    <h5 class="card-title">Error ðŸ‘Ž</h5>
+                    <h5 class="card-title">Error ð</h5>
                     <p class="card-text" th:text="${error}"></p>
                 </div>
             </div>

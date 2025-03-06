@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.egg.biblioteca.exception.MiException;
 import com.egg.biblioteca.model.Autor;
 import com.egg.biblioteca.model.Editorial;
+import com.egg.biblioteca.model.Libro;
 import com.egg.biblioteca.service.AutorServicio;
 import com.egg.biblioteca.service.EditorialServicio;
 import com.egg.biblioteca.service.LibroServicio;
@@ -50,5 +52,55 @@ public class LibroControlador {
             return "libro_form.html"; // volvemos a cargar el formulario.
         }
         return "index.html";
+    }
+
+    @GetMapping("/lista")
+    public String listar(ModelMap modelo) {
+        List<Libro> libros = libroServicio.listarLibros();
+        modelo.addAttribute("libros", libros);
+
+        return "libro_list";
+    }
+
+    @GetMapping("/modificar/{isbn}")
+    public String modificar(@PathVariable Long isbn, ModelMap modelo) {
+
+        modelo.put("libro", libroServicio.getOne(isbn));
+
+        List<Autor> autores = autorServicio.listarAutores();
+        List<Editorial> editoriales = editorialServicio.listarEditoriales();
+
+        modelo.addAttribute("autores", autores);
+        modelo.addAttribute("editoriales", editoriales);
+
+        return "libro_modificar.html";
+    }
+
+    @PostMapping("/modificar/{isbn}")
+    public String modificar(@PathVariable Long isbn, String titulo, Integer ejemplares, UUID idAutor,
+            UUID idEditorial, ModelMap modelo) {
+        try {
+            List<Autor> autores = autorServicio.listarAutores();
+            List<Editorial> editoriales = editorialServicio.listarEditoriales();
+
+            modelo.addAttribute("autores", autores);
+            modelo.addAttribute("editoriales", editoriales);
+
+            libroServicio.modificarLibro(isbn, titulo, ejemplares, idAutor, idEditorial);
+
+            return "redirect:../lista";
+
+        } catch (MiException ex) {
+            List<Autor> autores = autorServicio.listarAutores();
+            List<Editorial> editoriales = editorialServicio.listarEditoriales();
+
+            modelo.put("error", ex.getMessage());
+
+            modelo.addAttribute("autores", autores);
+            modelo.addAttribute("editoriales", editoriales);
+
+            return "libro_modificar.html";
+        }
+
     }
 }
